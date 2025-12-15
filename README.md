@@ -1,25 +1,141 @@
-### Technology Stack and Features
-  ## FastAPI for the Python backend API.
-    - SQLModel for the Python SQL database interactions (ORM).
-    - Pydantic, used by FastAPI, for the data validation and settings management.
-    - PostgreSQL as the SQL database.
-  ## Next.js for the frontend.
-    - Using TypeScript, hooks, Vite, and other parts of a modern frontend stack.
-    - Tailwind CSS and shadcn/ui for the frontend components.
-    - Playwright for End-to-End testing.
-  ## Docker Compose for development and production.
-  ## Secure password hashing by default.
-  ## JWT (JSON Web Token) authentication.
-  ## Tests with Pytest.
+# Base MVP Project
 
+A small starter full‑stack project:
 
-  ## Start the local development
-  `docker compose watch`
-  
-  1. Frontend, built with Docker, with routes handled based on the path: http://localhost:3000
+- Backend: FastAPI (Python)
+- Frontend: Next.js
+- Database: PostgreSQL
+- Dev: Docker Compose
 
-  2. Backend, JSON based web API based on OpenAPI: http://localhost:8000
+## Features
+- FastAPI + Pydantic / SQLModel
+- JWT auth and secure password hashing
+- Playwright E2E tests
+- Docker Compose development workflow
 
-  3. Automatic interactive documentation with Swagger UI (from the OpenAPI backend): http://localhost:8000/docs
+## Quick start
+Start everything for development:
+```bash
+docker compose watch
+```
 
-  4. Adminer, database web administration: http://localhost:8080
+Or run in detached mode:
+```bash
+docker compose up -d --build
+```
+
+## Local URLs
+- Backend API: http://localhost:8000
+- API docs (Swagger UI): http://localhost:8000/docs
+- Frontend: http://localhost:3000
+- Adminer (DB UI): http://localhost:8080
+
+> If a service is not reachable, check ports and service status (see Troubleshooting).
+
+## Useful commands
+- Show services and ports:
+  docker compose ps
+- Follow logs:
+  docker compose logs -f backend
+  docker compose logs -f frontend
+- Recreate a service (apply compose overrides such as ports):
+  docker compose up -d --force-recreate <service>
+- Run migrations / prestart scripts:
+  docker compose run --rm prestart bash -lc "bash scripts/prestart.sh"
+
+## Troubleshooting
+- Port missing after change? Recreate the container:
+  docker compose up -d --force-recreate adminer frontend
+- Service crashes? Check logs:
+  docker compose logs -f <service>
+- App reachable inside container but not on host:
+  docker compose exec <service> curl -v http://127.0.0.1:<port>/...
+  netstat -aon | findstr ":<port>"   # on Windows to find conflicts
+- If image build errors due to tag collisions, remove local tag and rebuild:
+  docker image rm <imagename>:<tag>
+  docker compose up --build -d
+
+## Development notes
+- Frontend uses environment vars prefixed with NEXT_PUBLIC_ for browser usage (set in .env or pass build args).
+- Backend settings are read from .env (see config.py for required vars).
+
+## Tests
+- Backend tests:
+  docker compose run --rm backend pytest
+- Frontend tests (Playwright):
+  npm run test (in frontend or via appropriate docker task)
+
+---
+
+Keep .env values secure for production (change SECRET_KEY, DB passwords, etc.).
+```// filepath: d:\private\base-mvp-project\README.md
+# Base MVP Project
+
+A small starter full‑stack project:
+
+- Backend: FastAPI (Python)
+- Frontend: Next.js
+- Database: PostgreSQL
+- Dev: Docker Compose
+
+## Features
+- FastAPI + Pydantic / SQLModel
+- JWT auth and secure password hashing
+- Playwright E2E tests
+- Docker Compose development workflow
+
+## Quick start
+Start everything for development:
+```bash
+docker compose watch
+```
+
+Or run in detached mode:
+```bash
+docker compose up -d --build
+```
+
+## Local URLs
+- Backend API: http://localhost:8000
+- API docs (Swagger UI): http://localhost:8000/docs
+- Frontend: http://localhost:3000
+- Adminer (DB UI): http://localhost:8080
+
+> If a service is not reachable, check ports and service status (see Troubleshooting).
+
+## Useful commands
+- Show services and ports:
+  docker compose ps
+- Follow logs:
+  docker compose logs -f backend
+  docker compose logs -f frontend
+- Recreate a service (apply compose overrides such as ports):
+  docker compose up -d --force-recreate <service>
+- Run migrations / prestart scripts:
+  docker compose run --rm prestart bash -lc "bash scripts/prestart.sh"
+
+## Troubleshooting
+- Port missing after change? Recreate the container:
+  docker compose up -d --force-recreate adminer frontend
+- Service crashes? Check logs:
+  docker compose logs -f <service>
+- App reachable inside container but not on host:
+  docker compose exec <service> curl -v http://127.0.0.1:<port>/...
+  netstat -aon | findstr ":<port>"   # on Windows to find conflicts
+- If image build errors due to tag collisions, remove local tag and rebuild:
+  docker image rm <imagename>:<tag>
+  docker compose up --build -d
+
+## Development notes
+- Frontend uses environment vars prefixed with NEXT_PUBLIC_ for browser usage (set in .env or pass build args).
+- Backend settings are read from .env (see config.py for required vars).
+
+## Tests
+- Backend tests:
+  docker compose run --rm backend pytest
+- Frontend tests (Playwright):
+  npm run test (in frontend or via appropriate docker task)
+
+---
+
+Keep .env values secure for production (change SECRET_KEY, DB passwords, etc.).
